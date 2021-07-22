@@ -1,5 +1,5 @@
 export default class template extends Laya.Script {
-    // 在此声明给开发界面(所有要展示值的组件都要)
+    // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
     /** @prop {name:xxx, tips:"xxx", type:Node, default:null}*/
 
     constructor() {
