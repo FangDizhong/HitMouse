@@ -2,11 +2,11 @@
     "x":0,
     "type":"Scene",
     "selectedBox":3,
-    "selecteID":4,
+    "selecteID":31,
     "searchKey":"Scene",
     "props":{"width":960,"sceneColor":"#000000","height":640},
     "nodeParent":-1,
-    "maxID":30,
+    "maxID":33,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -242,6 +242,37 @@
                     "compId":22,
                     "child":[
                         ]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "searchKey":"Image,hammer",
+                    "props":{"y":160,"x":146,"width":174,"skin":"res/hammer.png","rotation":0,"pivotY":160,"pivotX":146,"name":"hammer","height":171},
+                    "nodeParent":3,
+                    "label":"hammer",
+                    "isOpen":null,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":31,
+                    "child":[
+                        {
+                            "type":"Script",
+                            "switchAble":true,
+                            "source":"src/game/Hammer.js",
+                            "searchKey":"Script,Hammer",
+                            "removeAble":true,
+                            "props":{},
+                            "nodeParent":31,
+                            "label":"Hammer",
+                            "isDirectory":false,
+                            "isClose":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":32,
+                            "child":[
+                                ]
+                        }]
                 }]
         },
         {

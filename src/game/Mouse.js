@@ -1,4 +1,4 @@
-export default class template extends Laya.Script {
+export default class Mouse extends Laya.Script {
     // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
     // Mouse没有子组件所以不用声明
 
@@ -26,6 +26,26 @@ export default class template extends Laya.Script {
 
     onClick(e) {
         console.log("打到了老鼠："+this.indexPosMouse);
+
+        this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
+
+        // 销毁播放中的发大动画
+        if(this.timeLine){
+            this.timeLine.destroy();
+            this.timeLine = null;
+        }
+        //创建击中时的时间轴动画(地鼠花300毫秒变小回0)
+        this.timeLine = Laya.TimeLine.to(this.owner, {scaleX:0,scaleY:0}, 300, null, 1000);
+        this.timeLine.play(0,false); // 播放动画
+        
+        // 监听动画播放完事件后，执行函数删除
+        this.timeLine.on(Laya.Event.COMPLETE, this, function() {
+            this.owner.removeSelf();
+
+            // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
+            this.gameManager.arrMouse[this.indexPosMouse] = null;
+        });
+
     }
 
     // 自定义方法
@@ -52,7 +72,7 @@ export default class template extends Laya.Script {
             this.owner.removeSelf();
 
             // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
-            this.gameManager.arrMouse[indexPosMouse] = null;
+            this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
     }
 
