@@ -36,7 +36,7 @@
                 this.timeLine = null;
             }
 
-            //创建时间轴动画(锤子花90毫秒向上抬10,花180毫秒向下砸-10，再延迟300毫秒花100毫秒变透明隐藏锤子)
+            //创建时间轴动画(锤子花90毫秒向上抬10,花180毫秒向下砸-10，再延迟150毫秒花100毫秒变透明隐藏锤子)
             this.timeLine = Laya.TimeLine.to(this.owner,{rotation:10,alpha:1}, 90)
                                         .to(this.owner,{rotation:-10}, 90 * 2,)
                                         .to(this.owner,{alpha:0}, 100, null, 150);
@@ -115,8 +115,8 @@
                 this.gameManager.arrMouse[this.indexPosMouse] = null;
             });
 
-            // 把地鼠位置index传进来
-            this.gameManager.onMouseHitted(this.indexPosMouse);
+            // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
+            this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
 
         }
 
@@ -150,6 +150,58 @@
 
     }
 
+    class ScoreFloat extends Laya.Script {
+        // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
+
+        constructor() {
+            super();
+
+        // 在此声明值给代码(所有要展示值的组件都要)
+        this.xxx = null;
+        }
+
+        // 通常用于声明成员变量
+        onAwake() {
+            this.timeLine = null ;
+
+        }
+
+        // 每一帧函数执行之前执行，一般用于初始化
+        onStart() {}
+
+        onDisable() {}
+
+        onUpdate() {}
+
+        // 自定义方法
+        show(isPlusScore) {
+            //显示锤子
+            // this.owner.alpha = 1;
+            // this.owner.rotation = 0; // 恢复锤子角度
+
+            // 销毁播放中的发大动画
+            // if(this.timeLine){
+            //     this.timeLine.destroy();
+            //     this.timeLine = null;
+            // }
+
+            // 根据带钢盔坏人和不带钢盔好人动态更新不同分值
+            this.owner.skin = isPlusScore ? "res/score_100_2.png" : "res/score_100_1.png";
+
+            //创建时间轴动画(分数花300毫秒从当前位置向上浮动100,抖一下
+            //              再延迟300毫秒花400毫秒再向上浮动100到-200)
+            this.timeLine = Laya.TimeLine.to(this.owner,{y:this.owner.y - 100,alpha:1}, 300, Laya.Ease.backOut)
+                                        .to(this.owner,{y:this.owner.y - 200,alpha:0}, 400, null, 300);
+
+            this.timeLine.play(0,false); // 播放动画
+            
+            // 监听动画播放完事件后，执行函数隐藏锤子
+            // this.timeLine.on(Laya.Event.COMPLETE, this, function() {
+            //     this.owner.alpha = 0; 
+            //  })
+        }
+    }
+
     class GameManager extends Laya.Script {
         // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
         /** @prop {name:lblCountDownValue, tips:"倒计时", type:Node, default:null}*/
@@ -163,6 +215,8 @@
 
         /** @prop {name:hammer, tips:"锤子", type:Node, default:null}*/
 
+        /** @prop {name:prefabScoreFloat, tips:"漂浮分数", type:Prefab, default:null}*/
+        /** @prop {name:containerScoreFloat, tips:"漂浮分数容器", type:Node, default:null}*/
 
         constructor() {
             super();
@@ -178,6 +232,9 @@
             this.containerMouse = null;
 
             this.hammer =null;
+
+            this.prefabScoreFloat = null;
+            this.containerScoreFloat = null;
         }
 
         // 通常用于声明脚本中的临时成员变量
@@ -188,6 +245,9 @@
 
             // 声明成员存放老鼠对象
             this.arrMouse = [];
+
+            // 声明是否是+100分or-100分
+            this.isPlusScore = false;
         }
 
         // 每一帧函数执行之前执行，一般用于初始化
@@ -221,7 +281,7 @@
         }
 
         // 地鼠被打时把位置参数传进来
-        onMouseHitted(indexPosMouse) {
+        onMouseHitted(indexPosMouse, typeMouse) {
             // 如果游戏不在进行中，则不给砸
             if (!this.isPlaying) {
                 return;
@@ -231,6 +291,18 @@
             
             let compHammer = this.hammer.getComponent(Hammer); //获取hammer组件的Hammer.js脚本
             compHammer.show();
+
+            //调用预制体的create方法创造浮动分数赋值给ScoreFloat对象
+            let scoreFloat = this.prefabScoreFloat.create();
+            this.containerScoreFloat.addChild(scoreFloat); //把创造出来的浮动分数放进容器里
+            scoreFloat.pos(posMouse.x,posMouse.y);
+
+            //判断是不是钢盔地鼠2，是则+100，否则-100
+            this.isPlusScore = typeMouse == 2 ? true : false; 
+
+            //获取ScoreFloat组件的ScoreFloat.js脚本
+            let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
+            compScoreFloat.show(this.isPlusScore);
         }
 
         gameStart() {
@@ -239,7 +311,7 @@
             this.dialogGameOver.visible = false; //把节点的visible属性改为false
 
             // 每次开始游戏时，重置游戏数据
-            this.nCountDown = 15;
+            this.nCountDown = 30;
             this.nScore = 0;
 
             // 清空老鼠对象
@@ -331,6 +403,7 @@
     		reg("game/Hammer.js",Hammer);
     		reg("game/GameManager.js",GameManager);
     		reg("game/Mouse.js",Mouse);
+    		reg("game/ScoreFloat.js",ScoreFloat);
         }
     }
     GameConfig$1.width = 960;

@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"Scene",
-    "selectedBox":3,
-    "selecteID":31,
+    "selectedBox":4,
+    "selecteID":7,
     "searchKey":"Scene",
     "props":{"width":960,"sceneColor":"#000000","height":640},
     "nodeParent":-1,
-    "maxID":33,
+    "maxID":38,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -34,13 +34,14 @@
                     "props":{"y":-320,"x":-480,"width":960,"texture":"res/bg.png","name":"bg","height":640},
                     "nodeParent":3,
                     "label":"bg",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":4,
                     "child":[
                         {
+                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,line",
                             "props":{"y":102,"x":574,"width":127,"texture":"comp/hscroll.png","name":"line","height":5},
@@ -54,6 +55,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblCountDownKey",
                             "props":{"y":73,"x":582,"text":"倒计时：","name":"lblCountDownKey","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":true},
@@ -67,9 +69,10 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblCountDownValue",
-                            "props":{"y":73,"x":654,"text":"15","name":"lblCountDownValue","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":true},
+                            "props":{"y":73,"x":654,"text":"30","name":"lblCountDownValue","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":true},
                             "nodeParent":4,
                             "label":"lblCountDownValue",
                             "isDirectory":false,
@@ -80,6 +83,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblScoreKey",
                             "props":{"y":124,"x":600,"text":"得分：","name":"lblScoreKey","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":false},
@@ -93,6 +97,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblScoreValue",
                             "props":{"y":124,"x":654,"text":"100","name":"lblScoreValue","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":false},
@@ -250,14 +255,13 @@
                     "props":{"y":-10,"x":156,"width":174,"skin":"res/hammer.png","rotation":0,"pivotY":160,"pivotX":146,"name":"hammer","height":171,"alpha":0},
                     "nodeParent":3,
                     "label":"hammer",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":31,
                     "child":[
                         {
-                            "x":45,
                             "type":"Script",
                             "switchAble":true,
                             "source":"src/game/Hammer.js",
@@ -274,6 +278,21 @@
                             "child":[
                                 ]
                         }]
+                },
+                {
+                    "x":30,
+                    "type":"Sprite",
+                    "searchKey":"Sprite,containerScoreFloat",
+                    "props":{"name":"containerScoreFloat"},
+                    "nodeParent":3,
+                    "label":"containerScoreFloat",
+                    "isOpen":true,
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":33,
+                    "child":[
+                        ]
                 }]
         },
         {
@@ -300,11 +319,11 @@
             "source":"src/game/GameManager.js",
             "searchKey":"Script,GameManager",
             "removeAble":true,
-            "props":{"prefabMouse":"@Prefab:prefab/Image.prefab","lblScoreValue":"@node:11","lblScoreHighestValue":"@node:18","lblScoreCurrentValue":"@node:16","lblCountDownValue":"@node:7","hammer":"@node:31","dialogGameOver":"@node:12","containerMouse":"@node:25"},
+            "props":{"prefabScoreFloat":"@Prefab:prefab/ScoreFloat.prefab","prefabMouse":"@Prefab:prefab/Image.prefab","lblScoreValue":"@node:11","lblScoreHighestValue":"@node:18","lblScoreCurrentValue":"@node:16","lblCountDownValue":"@node:7","hammer":"@node:31","dialogGameOver":"@node:12","containerScoreFloat":"@node:33","containerMouse":"@node:25"},
             "nodeParent":2,
             "label":"GameManager",
             "isDirectory":false,
-            "isClose":true,
+            "isClose":false,
             "isAniNode":true,
             "hasChild":false,
             "compId":23,

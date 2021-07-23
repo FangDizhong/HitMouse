@@ -2,6 +2,7 @@
 import Hammer from "./game/Hammer"
 import GameManager from "./game/GameManager"
 import Mouse from "./game/Mouse"
+import ScoreFloat from "./game/ScoreFloat"
 
 export default class GameConfig {
     static init() {
@@ -10,6 +11,7 @@ export default class GameConfig {
 		reg("game/Hammer.js",Hammer);
 		reg("game/GameManager.js",GameManager);
 		reg("game/Mouse.js",Mouse);
+		reg("game/ScoreFloat.js",ScoreFloat);
     }
 }
 GameConfig.width = 960;

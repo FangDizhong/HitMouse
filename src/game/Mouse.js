@@ -53,8 +53,8 @@ export default class Mouse extends Laya.Script {
             this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
 
-        // 把地鼠位置index传进来
-        this.gameManager.onMouseHitted(this.indexPosMouse);
+        // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
+        this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
 
     }
 

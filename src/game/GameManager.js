@@ -1,6 +1,7 @@
 import GameConfig from "./GameConfig"
 import Mouse from "./Mouse"
 import Hammer from "./Hammer"
+import ScoreFloat from "./ScoreFloat"
 
 export default class GameManager extends Laya.Script {
     // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
@@ -15,6 +16,8 @@ export default class GameManager extends Laya.Script {
 
     /** @prop {name:hammer, tips:"锤子", type:Node, default:null}*/
 
+    /** @prop {name:prefabScoreFloat, tips:"漂浮分数", type:Prefab, default:null}*/
+    /** @prop {name:containerScoreFloat, tips:"漂浮分数容器", type:Node, default:null}*/
 
     constructor() {
         super()
@@ -30,6 +33,9 @@ export default class GameManager extends Laya.Script {
         this.containerMouse = null;
 
         this.hammer =null;
+
+        this.prefabScoreFloat = null;
+        this.containerScoreFloat = null;
     }
 
     // 通常用于声明脚本中的临时成员变量
@@ -40,6 +46,9 @@ export default class GameManager extends Laya.Script {
 
         // 声明成员存放老鼠对象
         this.arrMouse = [];
+
+        // 声明是否是+100分or-100分
+        this.isPlusScore = false;
     }
 
     // 每一帧函数执行之前执行，一般用于初始化
@@ -73,7 +82,7 @@ export default class GameManager extends Laya.Script {
     }
 
     // 地鼠被打时把位置参数传进来
-    onMouseHitted(indexPosMouse) {
+    onMouseHitted(indexPosMouse, typeMouse) {
         // 如果游戏不在进行中，则不给砸
         if (!this.isPlaying) {
             return;
@@ -83,6 +92,18 @@ export default class GameManager extends Laya.Script {
         
         let compHammer = this.hammer.getComponent(Hammer); //获取hammer组件的Hammer.js脚本
         compHammer.show();
+
+        //调用预制体的create方法创造浮动分数赋值给ScoreFloat对象
+        let scoreFloat = this.prefabScoreFloat.create();
+        this.containerScoreFloat.addChild(scoreFloat); //把创造出来的浮动分数放进容器里
+        scoreFloat.pos(posMouse.x,posMouse.y);
+
+        //判断是不是钢盔地鼠2，是则+100，否则-100
+        this.isPlusScore = typeMouse == 2 ? true : false; 
+
+        //获取ScoreFloat组件的ScoreFloat.js脚本
+        let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
+        compScoreFloat.show(this.isPlusScore);
     }
 
     gameStart() {
@@ -91,7 +112,7 @@ export default class GameManager extends Laya.Script {
         this.dialogGameOver.visible = false; //把节点的visible属性改为false
 
         // 每次开始游戏时，重置游戏数据
-        this.nCountDown = 15;
+        this.nCountDown = 30;
         this.nScore = 0;
 
         // 清空老鼠对象

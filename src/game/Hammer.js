@@ -33,7 +33,7 @@ export default class Hammer extends Laya.Script {
             this.timeLine = null;
         }
 
-        //创建时间轴动画(锤子花90毫秒向上抬10,花180毫秒向下砸-10，再延迟300毫秒花100毫秒变透明隐藏锤子)
+        //创建时间轴动画(锤子花90毫秒向上抬10,花180毫秒向下砸-10，再延迟150毫秒花100毫秒变透明隐藏锤子)
         this.timeLine = Laya.TimeLine.to(this.owner,{rotation:10,alpha:1}, 90)
                                     .to(this.owner,{rotation:-10}, 90 * 2,)
                                     .to(this.owner,{alpha:0}, 100, null, 150);

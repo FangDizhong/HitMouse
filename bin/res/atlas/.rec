@@ -40,6 +40,7 @@ P DDDDFB9E vslider$bar.png
 P 01BAE7F5 vslider.png
 D prefab
 R D588E664 Image.prefab
+R 078A354A ScoreFloat.prefab
 D res
 R E447A57D bg.png
 P 60A05ED0 hammer.png
@@ -47,3 +48,5 @@ P 76338ABC mouse01.png
 P EA9E5F71 mouse02.png
 P 1534FCBA mouse_hitted01.png
 P 989C43A5 mouse_hitted02.png
+P B8CF1CC4 score_100_1.png
+P EDAE7752 score_100_2.png

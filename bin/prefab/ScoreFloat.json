@@ -1,0 +1,1 @@
+{"type":"Image","props":{"y":0,"x":0,"width":146,"skin":"res/score_100_1.png","presetID":1,"name":"ScoreFloat","isPresetRoot":true,"height":79,"anchorY":0,"anchorX":0.5},"compId":36,"child":[{"type":"Script","props":{"presetID":2,"runtime":"game/ScoreFloat.js"},"compId":37}],"loadList":["res/score_100_1.png"],"loadList3D":[]}
