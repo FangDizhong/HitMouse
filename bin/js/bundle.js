@@ -202,6 +202,10 @@
         }
     }
 
+    //定义window.localStorage键值对中的key
+    let keyScoreHighest = "keyScoreHighest"; 
+
+
     class GameManager extends Laya.Script {
         // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
         /** @prop {name:lblCountDownValue, tips:"倒计时", type:Node, default:null}*/
@@ -303,6 +307,19 @@
             //获取ScoreFloat组件的ScoreFloat.js脚本
             let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
             compScoreFloat.show(this.isPlusScore);
+
+            // 判断是否是加分，是则+100赋值，否则-100赋值(且如果总分小于0，赋值为0)
+            if (this.isPlusScore) {
+                this.nScore += 100;
+            } else {
+                this.nScore -= 100;
+
+                if (this.nScore < 0) {
+                    this.nScore = 0;
+                }
+            }
+            // 同步到UI显示
+            this.lblScoreValue.text = ""+this.nScore;   // 更新UI里的值
         }
 
         gameStart() {
@@ -339,6 +356,21 @@
 
             Laya.timer.clear(this, this.onOneSecond);
 
+            this.lblScoreCurrentValue.text = ""+this.nScore;// 同步当前成绩
+
+            // 用window.localStorage保存历史最高值
+            let nScoreHighest = 0; //历史最高分初始赋值为0
+            if(window.localStorage[keyScoreHighest]){ //如果存在历史最高分(keyScoreHighest是键值对)，则判断
+                if (window.localStorage[keyScoreHighest] > this.nScore) { //如果历史最高分缓存＞当前成绩
+                    nScoreHighest = window.localStorage[keyScoreHighest]; //历史最高分由缓存赋值
+                } else {
+                    nScoreHighest = this.nScore;    //不然(历史最高分≤当前成绩)，历史最高分由当前成绩赋值
+                }
+            } else {    //如果缓存不存在历史最高分
+                nScoreHighest = this.nScore; //历史最高分还是由当前成绩赋值
+            }
+            window.localStorage[keyScoreHighest] = nScoreHighest; //把赋值后的历史最高分保存到本地
+            this.lblScoreHighestValue.text = ""+nScoreHighest; //更新UI里的值
         };
 
         generateMouse(numMouse) {
