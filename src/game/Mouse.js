@@ -15,6 +15,8 @@ export default class Mouse extends Laya.Script {
         this.gameManager =null; //声明一个本脚本用的gameManager空对象
         this.typeMouse = 0;
         this.indexPosMouse = -1;
+
+        this.isHitted = false;
     }
 
     // 每一帧函数执行之前执行，一般用于初始化
@@ -25,6 +27,11 @@ export default class Mouse extends Laya.Script {
     onUpdate() {}
 
     onClick(e) {
+        if (this.isHitted) {
+            return;
+        }
+        this.isHitted = true;
+        
         console.log("打到了老鼠："+this.indexPosMouse);
 
         this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
@@ -45,6 +52,9 @@ export default class Mouse extends Laya.Script {
             // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
             this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
+
+        // 把地鼠位置index传进来
+        this.gameManager.onMouseHitted(this.indexPosMouse);
 
     }
 

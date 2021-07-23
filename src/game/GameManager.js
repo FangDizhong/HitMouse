@@ -1,5 +1,6 @@
 import GameConfig from "./GameConfig"
 import Mouse from "./Mouse"
+import Hammer from "./Hammer"
 
 export default class GameManager extends Laya.Script {
     // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
@@ -11,6 +12,9 @@ export default class GameManager extends Laya.Script {
 
     /** @prop {name:prefabMouse, tips:"老鼠", type:Prefab, default:null}*/
     /** @prop {name:containerMouse, tips:"老鼠容器", type:Node, default:null}*/
+
+    /** @prop {name:hammer, tips:"锤子", type:Node, default:null}*/
+
 
     constructor() {
         super()
@@ -24,6 +28,8 @@ export default class GameManager extends Laya.Script {
 
         this.prefabMouse = null;
         this.containerMouse = null;
+
+        this.hammer =null;
     }
 
     // 通常用于声明脚本中的临时成员变量
@@ -65,6 +71,20 @@ export default class GameManager extends Laya.Script {
         }
 
     }
+
+    // 地鼠被打时把位置参数传进来
+    onMouseHitted(indexPosMouse) {
+        // 如果游戏不在进行中，则不给砸
+        if (!this.isPlaying) {
+            return;
+        }
+        let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
+        this.hammer.pos(posMouse.x + 120, posMouse.y - 60); //赋予锤子的坐标+偏移量
+        
+        let compHammer = this.hammer.getComponent(Hammer); //获取hammer组件的Hammer.js脚本
+        compHammer.show();
+    }
+
     gameStart() {
         this.isPlaying = true;
 

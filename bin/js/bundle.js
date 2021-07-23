@@ -12,7 +12,10 @@
         }
 
         // 通常用于声明成员变量
-        onAwake() {}
+        onAwake() {
+            this.timeLine = null ;
+
+        }
 
         // 每一帧函数执行之前执行，一般用于初始化
         onStart() {}
@@ -22,6 +25,29 @@
         onUpdate() {}
 
         // 自定义方法
+        show() {
+            //显示锤子
+            // this.owner.alpha = 1;
+            this.owner.rotation = 0; // 恢复锤子角度
+
+            // 销毁播放中的发大动画
+            if(this.timeLine){
+                this.timeLine.destroy();
+                this.timeLine = null;
+            }
+
+            //创建时间轴动画(锤子花90毫秒向上抬10,花180毫秒向下砸-10，再延迟300毫秒花100毫秒变透明隐藏锤子)
+            this.timeLine = Laya.TimeLine.to(this.owner,{rotation:10,alpha:1}, 90)
+                                        .to(this.owner,{rotation:-10}, 90 * 2,)
+                                        .to(this.owner,{alpha:0}, 100, null, 150);
+
+            this.timeLine.play(0,false); // 播放动画
+            
+            // 监听动画播放完事件后，执行函数隐藏锤子
+            // this.timeLine.on(Laya.Event.COMPLETE, this, function() {
+            //     this.owner.alpha = 0; 
+            //  })
+        }
 
     }
 
@@ -51,6 +77,8 @@
             this.gameManager =null; //声明一个本脚本用的gameManager空对象
             this.typeMouse = 0;
             this.indexPosMouse = -1;
+
+            this.isHitted = false;
         }
 
         // 每一帧函数执行之前执行，一般用于初始化
@@ -61,6 +89,11 @@
         onUpdate() {}
 
         onClick(e) {
+            if (this.isHitted) {
+                return;
+            }
+            this.isHitted = true;
+            
             console.log("打到了老鼠："+this.indexPosMouse);
 
             this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
@@ -81,6 +114,9 @@
                 // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
                 this.gameManager.arrMouse[this.indexPosMouse] = null;
             });
+
+            // 把地鼠位置index传进来
+            this.gameManager.onMouseHitted(this.indexPosMouse);
 
         }
 
@@ -125,6 +161,9 @@
         /** @prop {name:prefabMouse, tips:"老鼠", type:Prefab, default:null}*/
         /** @prop {name:containerMouse, tips:"老鼠容器", type:Node, default:null}*/
 
+        /** @prop {name:hammer, tips:"锤子", type:Node, default:null}*/
+
+
         constructor() {
             super();
 
@@ -137,6 +176,8 @@
 
             this.prefabMouse = null;
             this.containerMouse = null;
+
+            this.hammer =null;
         }
 
         // 通常用于声明脚本中的临时成员变量
@@ -178,6 +219,20 @@
             }
 
         }
+
+        // 地鼠被打时把位置参数传进来
+        onMouseHitted(indexPosMouse) {
+            // 如果游戏不在进行中，则不给砸
+            if (!this.isPlaying) {
+                return;
+            }
+            let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
+            this.hammer.pos(posMouse.x + 120, posMouse.y - 60); //赋予锤子的坐标+偏移量
+            
+            let compHammer = this.hammer.getComponent(Hammer); //获取hammer组件的Hammer.js脚本
+            compHammer.show();
+        }
+
         gameStart() {
             this.isPlaying = true;
 
