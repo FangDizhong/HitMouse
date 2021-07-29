@@ -60,6 +60,22 @@
         ],
     };
 
+    let WordsList = {
+        // 测试单词库
+        arrWordsList: [
+            {roma: "akai", arrRoma:["a","ka","i"], arrKana:["あ","か","い"]}, 
+            {roma: "ike", arrRoma:["i","ke"], arrKana:["い","け"]}, 
+            {roma: "uea", arrRoma:["u","e","a"], arrKana:["ウ","エ","ア"]}, 
+            {roma: "otoko", arrRoma:["o","to","ko"], arrKana:["お","と","こ"]}, 
+            {roma: "kisu", arrRoma:["ki","su"], arrKana:["キ","ス"]}, 
+            {roma: "tsukue", arrRoma:["tsu","ku","e"], arrKana:["つ","く","え"]}, 
+            {roma: "sakana", arrRoma:["sa","ka","na"], arrKana:["さ","か","な"]}, 
+            {roma: "sushi", arrRoma:["su","shi"], arrKana:["す","し"]}, 
+            {roma: "sofuto", arrRoma:["so","fu","to"], arrKana:["ソ","フ","ト"]}, 
+            {roma: "tanoshii", arrRoma:["ta","no","shi","i"], arrKana:["た","の","し","い"]}, 
+        ],
+    };
+
     class Mouse extends Laya.Script {
         // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
         // Mouse没有子组件所以不用声明
@@ -202,6 +218,58 @@
         }
     }
 
+    class LblWords extends Laya.Script {
+        // 在此声明给父组件内所有要绑定值的子组件(所有要展示值的组件都要)
+
+        constructor() {
+            super();
+
+        // 在此声明值给代码(所有要展示值的组件都要)
+        this.timeLine = null ;
+        // this.gameManager =null; //声明一个本脚本用的gameManager空对象
+        // this.typeMouse = 0;
+        // this.indexPosMouse = -1;
+    }
+
+        // 通常用于声明成员变量
+        onAwake() {}
+
+        // 每一帧函数执行之前执行，一般用于初始化
+        onStart() {}
+
+        onDisable() {}
+
+        onUpdate() {}
+
+        // 自定义方法
+    //定义三个变量，从外部传进来(typeMouse为了切换地鼠png; 
+        // 而gameManager，indexPosMouse只为了最后清空地鼠数组)
+        show() {
+            // this.gameManager = gameManager; 
+            // this.typeMouse = typeMouse;
+            // this.indexPosMouse = indexPosMouse;
+
+            this.owner.alpha = 0;
+
+            // //owner指向脚本绑定的节点对象，先设置初始大小为0
+            // this.owner.scaleX = 0;
+            // this.owner.scaleY = 0;
+
+            //创建时间轴动画(地鼠花300毫秒变大为1,在1000毫秒后，变小回0)
+            this.timeLine = Laya.TimeLine.to(this.owner,{alpha:1},300)
+                                        .to(this.owner,{alpha:0},300, null, 2000);
+            this.timeLine.play(0,false); // 播放动画
+            
+            // 监听动画播放完事件后，执行函数删除
+            // this.timeLine.on(Laya.Event.COMPLETE, this, function() {
+            //     this.owner.removeSelf();
+
+            //     // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
+            //     // this.gameManager.arrMouse[this.indexPosMouse] = null;
+            // });
+        }
+    }
+
     //定义window.localStorage键值对中的key
     let keyScoreHighest = "keyScoreHighest"; 
 
@@ -222,6 +290,8 @@
         /** @prop {name:prefabScoreFloat, tips:"漂浮分数", type:Prefab, default:null}*/
         /** @prop {name:containerScoreFloat, tips:"漂浮分数容器", type:Node, default:null}*/
 
+        /** @prop {name:lblWords, tips:"单词", type:Node, default:null}*/
+
         constructor() {
             super();
 
@@ -239,6 +309,9 @@
 
             this.prefabScoreFloat = null;
             this.containerScoreFloat = null;
+
+            this.lblWords = null;
+
         }
 
         // 通常用于声明脚本中的临时成员变量
@@ -249,6 +322,11 @@
 
             // 声明成员存放老鼠对象
             this.arrMouse = [];
+
+             // 声明成员存放单词对象
+             this.arrWords = [];
+             this.arrWordsList = [];
+
 
             // 声明是否是+100分or-100分
             this.isPlusScore = false;
@@ -330,6 +408,7 @@
             // 每次开始游戏时，重置游戏数据
             this.nCountDown = 30;
             this.nScore = 0;
+            this.lblWords = "";
 
             // 清空老鼠对象
             this.arrMouse.length = 0;
@@ -338,6 +417,13 @@
 
             }
 
+            // 生成随机单词数组
+            this.arrWordsList = WordsList.arrWordsList.slice(); //每次重新GameStart时，从WordsList.js拿到数组
+            console.log("拿到初始单词列表为",this.arrWordsList);
+            this.arrWords = null;
+            console.log("清空展示单词",this.arrWords);
+
+            // this.lblWords.text = "";   // 更新UI里的值
             this.lblCountDownValue.text = this.nCountDown;   // 更新UI里的值
             this.lblScoreValue.text = this.nScore;   // 更新UI里的值
 
@@ -345,7 +431,9 @@
             // 调用定时器API，每秒执行onOneSecond函数，函数另外实现
             Laya.timer.loop(1000, this, this.onOneSecond);
             
-            // 延迟一秒钟，开始生成地鼠
+            // 延迟一秒钟，启动生成单词函数（函数中自带每3秒重新生成单词的for循环）
+            Laya.timer.loop(3000, this, this.generateWord,[]);
+            // 延迟一秒钟，启动执行生成地鼠函数（函数中自带每3秒重新生成地鼠的for循环），第一次传入生成地鼠数量的随机数
             Laya.timer.once(1000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);
         }
 
@@ -373,12 +461,47 @@
             this.lblScoreHighestValue.text = ""+nScoreHighest; //更新UI里的值
         };
 
+        generateWord() {
+            // 如果isPlaying是false，直接返回，不生成单词了
+            if (!this.isPlaying) {
+                return;
+            }
+
+
+            // console.log(this.arrWords,WordsList.arrWordsList);
+            // for (let i=0; i < WordsList.arrWordsList; i++) {
+                let indexWord = this.getRandomInt(0, this.arrWordsList-1);//拿到[0,9]的随机index
+                this.arrWords = null;
+
+                this.arrWords = this.arrWordsList.splice(indexWord, 1)[0];
+                console.log("当前选中单词为",this.arrWords);
+
+                // 解决同一个洞出两种不同地鼠的问题
+                // this.arrMouse[indexPosMouse] = lblWords;
+
+                //拿到Mouse组件(Mouse.js脚本已经绑定了Mouse组件，import完getComponent就可以拿到)
+                // let compWords = this.lblWords.getComponent(LblWords); 
+                this.lblWords.text = this.arrWords.arrRoma.join(" ");   // 更新UI里的值
+                //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
+                // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
+                //把index传过去，方便拿到坐标
+                console.log("此时展示单词和剩下数组状态为",this.arrWords.arrRoma.join(" "),this.arrWordsList);
+                // let compWord = this.lblWords.getComponent(LblWords); //获取hammer组件的Hammer.js脚本
+
+                // compWord.show(); 
+            // }
+            // 每3秒执行一次，用for循环loop
+            // Laya.timer.once(3000, this, this.generateWord,[]);
+        }
+
+        // 传入每次生成老鼠的数量numMouse(在timer中以随机函数的形式传入)
         generateMouse(numMouse) {
             // 如果isPlaying是false，直接返回，不生成地鼠了
             if (!this.isPlaying) {
                 return;
             }
 
+            // 每次循环遍历生成numMouse只地鼠，该参数每次循环都会另外生成随机数
             for (let i=0; i < numMouse; i++) {
                 let indexPosMouse = this.getRandomInt(0, this.arrMouse.length-1);//拿到[0,8]的随机index
                 // 遍历时，如果该位置存在地鼠则继续，没有再创建

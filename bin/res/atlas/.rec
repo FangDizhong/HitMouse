@@ -43,7 +43,10 @@ R D588E664 Image.prefab
 R EF861A4B ScoreFloat.prefab
 D res
 R E447A57D bg.png
+R D12EF1D8 board.png
 P 60A05ED0 hammer.png
+R ED5B7FA6 hittedpattern01.png
+R D3FE57C9 hittedpattern02.png
 P 76338ABC mouse01.png
 P EA9E5F71 mouse02.png
 P 1534FCBA mouse_hitted01.png

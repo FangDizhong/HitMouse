@@ -1,12 +1,12 @@
 {
     "x":0,
     "type":"Scene",
-    "selectedBox":4,
-    "selecteID":7,
+    "selectedBox":38,
+    "selecteID":39,
     "searchKey":"Scene",
     "props":{"width":960,"sceneColor":"#000000","height":640},
     "nodeParent":-1,
-    "maxID":38,
+    "maxID":42,
     "label":"Scene",
     "isOpen":true,
     "isDirectory":true,
@@ -34,14 +34,13 @@
                     "props":{"y":-320,"x":-480,"width":960,"texture":"res/bg.png","name":"bg","height":640},
                     "nodeParent":3,
                     "label":"bg",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":4,
                     "child":[
                         {
-                            "x":45,
                             "type":"Sprite",
                             "searchKey":"Sprite,line",
                             "props":{"y":102,"x":574,"width":127,"texture":"comp/hscroll.png","name":"line","height":5},
@@ -55,7 +54,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblCountDownKey",
                             "props":{"y":73,"x":582,"text":"倒计时：","name":"lblCountDownKey","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":true},
@@ -69,7 +67,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblCountDownValue",
                             "props":{"y":73,"x":654,"text":"30","name":"lblCountDownValue","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":true},
@@ -83,7 +80,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblScoreKey",
                             "props":{"y":124,"x":600,"text":"得分：","name":"lblScoreKey","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":false},
@@ -97,7 +93,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Label",
                             "searchKey":"Label,lblScoreValue",
                             "props":{"y":124,"x":654,"text":"100","name":"lblScoreValue","fontSize":18,"font":"Microsoft YaHei","color":"#602a14","bold":false},
@@ -125,112 +120,6 @@
                     "compId":25,
                     "child":[
                         ]
-                },
-                {
-                    "x":30,
-                    "type":"Sprite",
-                    "searchKey":"Sprite,dialogGameOver",
-                    "props":{"y":-159,"x":-198,"width":396,"texture":"comp/img_bg.png","name":"dialogGameOver","height":318},
-                    "nodeParent":3,
-                    "label":"dialogGameOver",
-                    "isOpen":false,
-                    "isDirectory":true,
-                    "isAniNode":true,
-                    "hasChild":true,
-                    "compId":12,
-                    "child":[
-                        {
-                            "type":"Label",
-                            "searchKey":"Label,lblDialogTitle",
-                            "props":{"y":29,"x":118,"text":"游戏结束","name":"lblDialogTitle","fontSize":40,"font":"Microsoft YaHei","color":"#ded5cb","bold":true},
-                            "nodeParent":12,
-                            "label":"lblDialogTitle",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":13,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "type":"Label",
-                            "searchKey":"Label,lblScoreCurrentKey",
-                            "props":{"y":139,"x":73,"text":"当前成绩:","name":"lblScoreCurrentKey","fontSize":40,"font":"Microsoft YaHei","color":"#603e19","bold":true},
-                            "nodeParent":12,
-                            "label":"lblScoreCurrentKey",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":15,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "type":"Label",
-                            "searchKey":"Label,lblScoreCurrentValue",
-                            "props":{"y":139,"x":265,"text":"0","name":"lblScoreCurrentValue","fontSize":40,"font":"Microsoft YaHei","color":"#603e19","bold":true},
-                            "nodeParent":12,
-                            "label":"lblScoreCurrentValue",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":16,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "type":"Label",
-                            "searchKey":"Label,lblScoreHighestKey",
-                            "props":{"y":207,"x":118,"text":"历史最高:","name":"lblScoreHighestKey","fontSize":25,"font":"Microsoft YaHei","color":"#603e19","bold":true},
-                            "nodeParent":12,
-                            "label":"lblScoreHighestKey",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":17,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "type":"Label",
-                            "searchKey":"Label,lblScoreHighestValue",
-                            "props":{"y":207,"x":254,"text":"0","name":"lblScoreHighestValue","fontSize":25,"font":"Microsoft YaHei","color":"#603e19","bold":true},
-                            "nodeParent":12,
-                            "label":"lblScoreHighestValue",
-                            "isDirectory":false,
-                            "isAniNode":true,
-                            "hasChild":false,
-                            "compId":18,
-                            "child":[
-                                ]
-                        },
-                        {
-                            "type":"Image",
-                            "searchKey":"Image,btnPlayAgain",
-                            "props":{"y":258,"x":134,"skin":"comp/progress$bar.png","name":"btnPlayAgain"},
-                            "nodeParent":12,
-                            "label":"btnPlayAgain",
-                            "isOpen":true,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":19,
-                            "child":[
-                                {
-                                    "type":"Label",
-                                    "searchKey":"Label,lblBtnTitle",
-                                    "props":{"y":6,"x":24,"text":"再来一局","name":"lblBtnTitle","fontSize":20,"font":"Microsoft YaHei","color":"#e2d9bc","bold":true},
-                                    "nodeParent":19,
-                                    "label":"lblBtnTitle",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":20,
-                                    "child":[
-                                        ]
-                                }]
-                        }],
-                    "$HIDDEN":true
                 },
                 {
                     "x":30,
@@ -293,6 +182,147 @@
                     "compId":33,
                     "child":[
                         ]
+                },
+                {
+                    "x":30,
+                    "type":"Sprite",
+                    "searchKey":"Sprite,board",
+                    "props":{"y":-320,"x":-480,"width":405,"texture":"res/board.png","pivotY":62,"pivotX":48,"name":"board","height":285},
+                    "nodeParent":3,
+                    "label":"board",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":38,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblWords",
+                            "props":{"y":179,"x":222,"width":125.09765625,"valign":"middle","strokeColor":"#000000","stroke":4,"name":"lblWords","height":50,"fontSize":50,"font":"Arial","color":"#aa6130","bold":true,"anchorY":0.5,"anchorX":0.5,"align":"center"},
+                            "nodeParent":38,
+                            "label":"lblWords",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":39,
+                            "child":[
+                                ]
+                        }]
+                },
+                {
+                    "x":30,
+                    "type":"Sprite",
+                    "searchKey":"Sprite,dialogGameOver",
+                    "props":{"y":-159,"x":-198,"width":396,"texture":"comp/img_bg.png","name":"dialogGameOver","height":318},
+                    "nodeParent":3,
+                    "label":"dialogGameOver",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":12,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblDialogTitle",
+                            "props":{"y":29,"x":118,"text":"游戏结束","name":"lblDialogTitle","fontSize":40,"font":"Microsoft YaHei","color":"#ded5cb","bold":true},
+                            "nodeParent":12,
+                            "label":"lblDialogTitle",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":13,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblScoreCurrentKey",
+                            "props":{"y":139,"x":73,"text":"当前成绩:","name":"lblScoreCurrentKey","fontSize":40,"font":"Microsoft YaHei","color":"#603e19","bold":true},
+                            "nodeParent":12,
+                            "label":"lblScoreCurrentKey",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":15,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblScoreCurrentValue",
+                            "props":{"y":139,"x":265,"text":"0","name":"lblScoreCurrentValue","fontSize":40,"font":"Microsoft YaHei","color":"#603e19","bold":true},
+                            "nodeParent":12,
+                            "label":"lblScoreCurrentValue",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":16,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblScoreHighestKey",
+                            "props":{"y":207,"x":118,"text":"历史最高:","name":"lblScoreHighestKey","fontSize":25,"font":"Microsoft YaHei","color":"#603e19","bold":true},
+                            "nodeParent":12,
+                            "label":"lblScoreHighestKey",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":17,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Label",
+                            "searchKey":"Label,lblScoreHighestValue",
+                            "props":{"y":207,"x":254,"text":"0","name":"lblScoreHighestValue","fontSize":25,"font":"Microsoft YaHei","color":"#603e19","bold":true},
+                            "nodeParent":12,
+                            "label":"lblScoreHighestValue",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":18,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "x":45,
+                            "type":"Image",
+                            "searchKey":"Image,btnPlayAgain",
+                            "props":{"y":258,"x":134,"skin":"comp/progress$bar.png","name":"btnPlayAgain"},
+                            "nodeParent":12,
+                            "label":"btnPlayAgain",
+                            "isOpen":true,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "compId":19,
+                            "child":[
+                                {
+                                    "x":60,
+                                    "type":"Label",
+                                    "searchKey":"Label,lblBtnTitle",
+                                    "props":{"y":6,"x":24,"text":"再来一局","name":"lblBtnTitle","fontSize":20,"font":"Microsoft YaHei","color":"#e2d9bc","bold":true},
+                                    "nodeParent":19,
+                                    "label":"lblBtnTitle",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "compId":20,
+                                    "child":[
+                                        ]
+                                }]
+                        }],
+                    "$HIDDEN":true
                 }]
         },
         {
@@ -319,7 +349,7 @@
             "source":"src/game/GameManager.js",
             "searchKey":"Script,GameManager",
             "removeAble":true,
-            "props":{"prefabScoreFloat":"@Prefab:prefab/ScoreFloat.prefab","prefabMouse":"@Prefab:prefab/Image.prefab","lblScoreValue":"@node:11","lblScoreHighestValue":"@node:18","lblScoreCurrentValue":"@node:16","lblCountDownValue":"@node:7","hammer":"@node:31","dialogGameOver":"@node:12","containerScoreFloat":"@node:33","containerMouse":"@node:25"},
+            "props":{"prefabScoreFloat":"@Prefab:prefab/ScoreFloat.prefab","prefabMouse":"@Prefab:prefab/Image.prefab","lblWords":"@node:39","lblScoreValue":"@node:11","lblScoreHighestValue":"@node:18","lblScoreCurrentValue":"@node:16","lblCountDownValue":"@node:7","hammer":"@node:31","dialogGameOver":"@node:12","containerScoreFloat":"@node:33","containerMouse":"@node:25"},
             "nodeParent":2,
             "label":"GameManager",
             "isDirectory":false,
