@@ -323,8 +323,8 @@
             // 声明成员存放老鼠对象
             this.arrMouse = [];
 
-             // 声明成员存放单词对象
-             this.arrWords = [];
+             // 声明成员存放用于展示的单词对象，和用于游戏处理的单词数组
+             this.Word = null;
              this.arrWordsList = [];
 
 
@@ -408,7 +408,6 @@
             // 每次开始游戏时，重置游戏数据
             this.nCountDown = 30;
             this.nScore = 0;
-            this.lblWords = "";
 
             // 清空老鼠对象
             this.arrMouse.length = 0;
@@ -420,10 +419,10 @@
             // 生成随机单词数组
             this.arrWordsList = WordsList.arrWordsList.slice(); //每次重新GameStart时，从WordsList.js拿到数组
             console.log("拿到初始单词列表为",this.arrWordsList);
-            this.arrWords = null;
-            console.log("清空展示单词",this.arrWords);
+            this.Word = null;
+            console.log("清空展示单词",this.Word);
 
-            // this.lblWords.text = "";   // 更新UI里的值
+            this.lblWords.text = "";   // 更新UI里的值
             this.lblCountDownValue.text = this.nCountDown;   // 更新UI里的值
             this.lblScoreValue.text = this.nScore;   // 更新UI里的值
 
@@ -431,8 +430,8 @@
             // 调用定时器API，每秒执行onOneSecond函数，函数另外实现
             Laya.timer.loop(1000, this, this.onOneSecond);
             
-            // 延迟一秒钟，启动生成单词函数（函数中自带每3秒重新生成单词的for循环）
-            Laya.timer.loop(3000, this, this.generateWord,[]);
+            // 延迟0.5秒钟，启动生成单词函数（函数中自带每3秒重新生成单词的for循环），第一次传入生成单词数组index的随机数
+            Laya.timer.once(500, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
             // 延迟一秒钟，启动执行生成地鼠函数（函数中自带每3秒重新生成地鼠的for循环），第一次传入生成地鼠数量的随机数
             Laya.timer.once(1000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);
         }
@@ -461,37 +460,21 @@
             this.lblScoreHighestValue.text = ""+nScoreHighest; //更新UI里的值
         };
 
-        generateWord() {
+        // 每3秒生成单词，传入每次循环产生的随机单词index
+        generateWord(wordIndex) {
             // 如果isPlaying是false，直接返回，不生成单词了
             if (!this.isPlaying) {
                 return;
             }
+            // 从游戏单词数组中选择随机index位置，删除1个单词，[0]表示不做替换
+            this.Word = this.arrWordsList.splice(wordIndex, 1)[0];
+            console.log("当前indexWord为",wordIndex,"当前选中单词为",this.Word);
 
-
-            // console.log(this.arrWords,WordsList.arrWordsList);
-            // for (let i=0; i < WordsList.arrWordsList; i++) {
-                let indexWord = this.getRandomInt(0, this.arrWordsList-1);//拿到[0,9]的随机index
-                this.arrWords = null;
-
-                this.arrWords = this.arrWordsList.splice(indexWord, 1)[0];
-                console.log("当前选中单词为",this.arrWords);
-
-                // 解决同一个洞出两种不同地鼠的问题
-                // this.arrMouse[indexPosMouse] = lblWords;
-
-                //拿到Mouse组件(Mouse.js脚本已经绑定了Mouse组件，import完getComponent就可以拿到)
-                // let compWords = this.lblWords.getComponent(LblWords); 
-                this.lblWords.text = this.arrWords.arrRoma.join(" ");   // 更新UI里的值
-                //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
-                // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
-                //把index传过去，方便拿到坐标
-                console.log("此时展示单词和剩下数组状态为",this.arrWords.arrRoma.join(" "),this.arrWordsList);
-                // let compWord = this.lblWords.getComponent(LblWords); //获取hammer组件的Hammer.js脚本
-
-                // compWord.show(); 
-            // }
-            // 每3秒执行一次，用for循环loop
-            // Laya.timer.once(3000, this, this.generateWord,[]);
+            this.lblWords.text = this.Word.arrRoma.join(" ");   // 更新UI里的值
+            console.log("此时展示单词和剩下数组状态为",this.lblWords.text,this.arrWordsList);
+            
+            // 每3秒钟循环本函数，传入随机index
+            Laya.timer.once(3000, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
         }
 
         // 传入每次生成老鼠的数量numMouse(在timer中以随机函数的形式传入)
