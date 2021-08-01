@@ -40,6 +40,7 @@ P DDDDFB9E vslider$bar.png
 P 01BAE7F5 vslider.png
 D prefab
 R D588E664 Image.prefab
+R 75A5CA5D MouseCard.prefab
 R EF861A4B ScoreFloat.prefab
 D res
 R E447A57D bg.png

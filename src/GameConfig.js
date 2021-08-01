@@ -2,6 +2,7 @@
 import Hammer from "./game/Hammer"
 import GameManager from "./game/GameManager"
 import Mouse from "./game/Mouse"
+import MouseCard from "./game/MouseCard"
 import ScoreFloat from "./game/ScoreFloat"
 
 export default class GameConfig {
@@ -11,6 +12,7 @@ export default class GameConfig {
 		reg("game/Hammer.js",Hammer);
 		reg("game/GameManager.js",GameManager);
 		reg("game/Mouse.js",Mouse);
+		reg("game/MouseCard.js",MouseCard);
 		reg("game/ScoreFloat.js",ScoreFloat);
     }
 }

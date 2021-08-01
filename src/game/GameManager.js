@@ -7,6 +7,9 @@ import Hammer from "./Hammer"
 import ScoreFloat from "./ScoreFloat"
 import LblWords from "./LblWords"
 
+import MouseCard from "./MouseCard"
+import KanaList from "./KanaList"
+
 //定义window.localStorage键值对中的key
 let keyScoreHighest = "keyScoreHighest"; 
 
@@ -29,6 +32,9 @@ export default class GameManager extends Laya.Script {
 
     /** @prop {name:lblWords, tips:"单词", type:Node, default:null}*/
 
+    /** @prop {name:prefabMouseCard, tips:"老鼠举牌", type:Prefab, default:null}*/
+
+
     constructor() {
         super()
 
@@ -49,6 +55,7 @@ export default class GameManager extends Laya.Script {
 
         this.lblWords = null;
 
+        this.prefabMouseCard = null;
     }
 
     // 通常用于声明脚本中的临时成员变量
@@ -64,6 +71,8 @@ export default class GameManager extends Laya.Script {
          this.Word = null;
          this.arrWordsList = [];
 
+        // 声明成员存放用于展示的假名数组
+         this.CardKana = [];
 
         // 声明是否是+100分or-100分
         this.isPlusScore = false;
@@ -146,14 +155,14 @@ export default class GameManager extends Laya.Script {
         this.nCountDown = 30;
         this.nScore = 0;
 
-        // 清空老鼠对象
+        // 清空老鼠数组，放置9个空值
         this.arrMouse.length = 0;
         for (let i = 0; i < 9; i++) {
-            this.arrMouse.push(null); //先放一堆空值进来
+            this.arrMouse.push(null); //先放9个空值进来
 
         }
 
-        // 生成随机单词数组
+        // 复制用于生成随机单词的数组
         this.arrWordsList = WordsList.arrWordsList.slice(); //每次重新GameStart时，从WordsList.js拿到数组
         console.log("拿到初始单词列表为",this.arrWordsList);
         this.Word = null;
@@ -170,7 +179,10 @@ export default class GameManager extends Laya.Script {
         // 延迟0.5秒钟，启动生成单词函数（函数中自带每3秒重新生成单词的for循环），第一次传入生成单词数组index的随机数
         Laya.timer.once(500, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
         // 延迟一秒钟，启动执行生成地鼠函数（函数中自带每3秒重新生成地鼠的for循环），第一次传入生成地鼠数量的随机数
-        Laya.timer.once(1000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);
+        // Laya.timer.once(1000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);        
+        
+        // 延迟一秒钟，启动执行生成地鼠函数（函数中自带每3秒重新生成地鼠的for循环），第一次传入生成地鼠数量的随机数
+        Laya.timer.once(1000, this, this.generateMouseCard,[this.getRandomInt(5,this.arrMouse.length)]);
     }
 
     GameOver() {
@@ -205,13 +217,21 @@ export default class GameManager extends Laya.Script {
         }
         // 从游戏单词数组中选择随机index位置，删除1个单词，[0]表示不做替换
         this.Word = this.arrWordsList.splice(wordIndex, 1)[0];
-        console.log("当前indexWord为",wordIndex,"当前选中单词为",this.Word);
+        console.log("当前选中单词为",this.Word);
 
         this.lblWords.text = this.Word.arrRoma.join(" ");   // 更新UI里的值
         console.log("此时展示单词和剩下数组状态为",this.lblWords.text,this.arrWordsList);
-        
+        this.CardKana = [];
+        this.CardKana = this.Word.arrKana; //
+        // this.CardKana.push.apply (this.CardKana,this.Word.arrKana);
+        console.log("此时展示假名数组为",this.CardKana); 
+
         // 每3秒钟循环本函数，传入随机index
         Laya.timer.once(3000, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
+    }
+
+    generateKana() {
+
     }
 
     // 传入每次生成老鼠的数量numMouse(在timer中以随机函数的形式传入)
@@ -223,7 +243,7 @@ export default class GameManager extends Laya.Script {
 
         // 每次循环遍历生成numMouse只地鼠，该参数每次循环都会另外生成随机数
         for (let i=0; i < numMouse; i++) {
-            let indexPosMouse = this.getRandomInt(0, this.arrMouse.length-1);//拿到[0,8]的随机index
+            let indexPosMouse = this.getRandomInt(0, this.arrMouse.length-1);//拿到[0,8]的随机位置index
             // 遍历时，如果该位置存在地鼠则继续，没有再创建
             if (this.arrMouse[indexPosMouse]) {
                 continue;
@@ -249,6 +269,78 @@ export default class GameManager extends Laya.Script {
         }
 
         Laya.timer.once(3000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);
+    }
+
+
+
+    // 传入每次生成老鼠的数量numMouse(在timer中以随机函数的形式传入)
+    generateMouseCard(numMouse) {
+        // 如果isPlaying是false，直接返回，不生成地鼠了
+        if (!this.isPlaying) {
+            return;
+        }
+
+        // 每次循环遍历生成numMouse-this.Word.arrKana.length个假名干扰项，和正确假名数组合并
+        for (let i=this.Word.arrKana.length; i < numMouse; i++) {
+            let indexDammyKana = this.getRandomInt(0, KanaList.arrKana.length-1); //拿到随机假名干扰项index
+            
+            // if (this.Word.type = "hira") {
+            //     if(this.Word.arrKana.indexOf(KanaList.arrKana[indexDammyKana].hira) < 0) {
+            //         this.CardKana.push(KanaList.arrKana[indexDammyKana].hira);
+            //     };
+            // }
+            // else {
+            //     if(this.Word.arrKana.indexOf(KanaList.arrKana[indexDammyKana].kata) < 0) {
+            //         this.CardKana.push(KanaList.arrKana[indexDammyKana].kata);
+            //     };
+            // }
+
+            switch (this.Word.type) {
+            case "hira":
+                if(this.Word.arrKana.indexOf(KanaList.arrKana[indexDammyKana].hira) < 0) {
+                    this.CardKana.push(KanaList.arrKana[indexDammyKana].hira);
+                };
+                break;
+            case "kata" :
+                if(this.Word.arrKana.indexOf(KanaList.arrKana[indexDammyKana].kata) < 0) {
+                    this.CardKana.push(KanaList.arrKana[indexDammyKana].kata);
+                };
+                break;
+            }
+        }
+
+        console.log ("当前老鼠数量为",numMouse, "用于展示的假名数组为",this.CardKana);
+
+
+        // 每次循环遍历生成numMouse只地鼠，该参数每次循环都会另外生成随机数
+        for (let i=0; i < numMouse; i++) {
+            let indexPosMouse = this.getRandomInt(0, this.arrMouse.length-1);//拿到[0,8]的随机位置index
+            // 遍历时，如果该位置存在地鼠则继续，没有再创建
+            if (this.arrMouse[indexPosMouse]) {
+                console.log("该位置有老鼠");
+                continue;
+            }
+
+            let mouse = this.prefabMouseCard.create(); //调用预制体的create方法创造地鼠赋值给mouse对象
+            this.containerMouse.addChild(mouse); //把创造出来的老鼠放进容器里
+
+            let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
+            mouse.pos(posMouse.x,posMouse.y);
+
+            // 解决同一个洞出两种不同地鼠的问题
+            this.arrMouse[indexPosMouse] = mouse;
+
+            //拿到Mouse组件(Mouse.js脚本已经绑定了Mouse组件，import完getComponent就可以拿到)
+            let compMouse = mouse.getComponent(MouseCard); 
+            let typeMouse = this.getRandomInt(1,2); //随机1或2
+
+            //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
+            // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
+            //把index传过去，方便拿到坐标
+            compMouse.show(this, typeMouse, indexPosMouse); 
+        }
+
+        Laya.timer.once(3000, this, this.generateMouseCard,[this.getRandomInt(5,this.arrMouse.length)]);
     }
 
     /**
