@@ -177,7 +177,7 @@ export default class GameManager extends Laya.Script {
         Laya.timer.loop(1000, this, this.onOneSecond);
         
         // 延迟0.5秒钟，启动生成单词函数（函数中自带每3秒重新生成单词的for循环），第一次传入生成单词数组index的随机数
-        Laya.timer.once(500, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
+        Laya.timer.once(300, this, this.generateWord,[this.getRandomInt(0, this.arrWordsList.length-1)]);
         // 延迟一秒钟，启动执行生成地鼠函数（函数中自带每3秒重新生成地鼠的for循环），第一次传入生成地鼠数量的随机数
         // Laya.timer.once(1000, this, this.generateMouse,[this.getRandomInt(1,this.arrMouse.length)]);        
         
@@ -221,7 +221,7 @@ export default class GameManager extends Laya.Script {
 
         this.lblWords.text = this.Word.arrRoma.join(" ");   // 更新UI里的值
         console.log("此时展示单词和剩下数组状态为",this.lblWords.text,this.arrWordsList);
-        this.CardKana = [];
+        this.CardKana.length = 0;
         this.CardKana = this.Word.arrKana; //
         // this.CardKana.push.apply (this.CardKana,this.Word.arrKana);
         console.log("此时展示假名数组为",this.CardKana); 
@@ -281,7 +281,7 @@ export default class GameManager extends Laya.Script {
         }
 
         // 每次循环遍历生成numMouse-this.Word.arrKana.length个假名干扰项，和正确假名数组合并
-        for (let i=this.Word.arrKana.length; i < numMouse; i++) {
+        for (;this.Word.arrKana.length < numMouse;) {
             let indexDammyKana = this.getRandomInt(0, KanaList.arrKana.length-1); //拿到随机假名干扰项index
             
             // if (this.Word.type = "hira") {
