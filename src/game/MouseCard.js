@@ -52,7 +52,7 @@ export default class MouseCard extends Laya.Script {
             this.owner.removeSelf();
 
             // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
-            this.gameManager.arrMouse[this.indexPosMouse] = null;
+            // this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
 
         // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
@@ -63,10 +63,10 @@ export default class MouseCard extends Laya.Script {
     // 自定义方法
     //定义三个变量，从外部传进来(typeMouse为了切换地鼠png; 
     // 而gameManager，indexPosMouse只为了最后清空地鼠数组)
-    show(gameManager,typeMouse,indexPosMouse) {
-        this.gameManager = gameManager; 
+    show(typeMouse) {
+        // this.gameManager = gameManager; 
         this.typeMouse = typeMouse;
-        this.indexPosMouse = indexPosMouse;
+        // this.indexPosMouse = indexPosMouse;
 
         this.owner.skin = "res/mouse0"+this.typeMouse+".png";
 
@@ -84,7 +84,7 @@ export default class MouseCard extends Laya.Script {
             this.owner.removeSelf();
 
             // 把传进来的gameManager里的老鼠数组[位置index]赋值为空
-            this.gameManager.arrMouse[this.indexPosMouse] = null;
+            // this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
     }
 
