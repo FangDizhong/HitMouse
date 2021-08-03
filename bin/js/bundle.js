@@ -288,6 +288,7 @@
             this.gameManager =null; //声明一个本脚本用的gameManager空对象
             this.typeMouse = 0;
             this.indexPosMouse = -1;
+            this.lblKana.text = null;
 
             this.isHitted = false;
         }
@@ -306,7 +307,7 @@
             }
             this.isHitted = true;
             
-            console.log("打到了老鼠："+this.indexPosMouse);
+            // console.log("打到了老鼠："+this.lblKana.text);
 
             this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
 
@@ -328,7 +329,7 @@
             });
 
             // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
-            this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
+            // this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
 
         }
 
@@ -478,6 +479,7 @@
             // 声明成员存放老鼠对象
             this.Hole = null;
             this.arrMouse = [];
+            this.compMouse = null;
 
              // 声明成员存放用于展示的单词对象，和用于游戏处理的单词数组
              this.Word = null;
@@ -538,7 +540,12 @@
             scoreFloat.pos(posMouse.x,posMouse.y);
 
             //判断是不是钢盔地鼠2，是则+100，否则-100
-            this.isPlusScore = typeMouse == 2 ? true : false; 
+            // this.isPlusScore = typeMouse == 2 ? true : false; 
+
+            //判断this.Word.arrKana里包不包括this.lblKana.text，是则+100，否则-100
+            this.isPlusScore = this.Word.arrKana.indexOf(this.compMouse.lblKana.text) > -1 ? true : false; 
+
+            console.log("打到了老鼠："+this.compMouse.lblKana.text,"此时单词为",this.Word.arrKana);
 
             //获取ScoreFloat组件的ScoreFloat.js脚本
             let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
@@ -737,13 +744,14 @@
                 // this.arrMouse[indexPosMouse] = mouse;
 
                 //拿到Mouse组件(Mouse.js脚本已经绑定了Mouse组件，import完getComponent就可以拿到)
-                let compMouse = mouse.getComponent(MouseCard); 
+                this.compMouse = mouse.getComponent(MouseCard); 
                 let typeMouse = this.getRandomInt(1,2); //随机1或2
+                this.compMouse.lblKana.text = this.CardKana.splice(0,1)[0];   // 更新UI里的值
 
                 //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
                 // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
                 //把index传过去，方便拿到坐标
-                compMouse.show(typeMouse); 
+                this.compMouse.show(typeMouse); 
             }
 
             Laya.timer.once(3000, this, this.generateMouseCard,[this.getRandomInt(5,GameConfig.arrPosMouse.length)]);

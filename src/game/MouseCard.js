@@ -16,6 +16,7 @@ export default class MouseCard extends Laya.Script {
         this.gameManager =null; //声明一个本脚本用的gameManager空对象
         this.typeMouse = 0;
         this.indexPosMouse = -1;
+        this.lblKana.text = null;
 
         this.isHitted = false;
     }
@@ -34,7 +35,7 @@ export default class MouseCard extends Laya.Script {
         }
         this.isHitted = true;
         
-        console.log("打到了老鼠："+this.indexPosMouse);
+        // console.log("打到了老鼠："+this.lblKana.text);
 
         this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
 
