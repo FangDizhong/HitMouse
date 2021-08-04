@@ -19,6 +19,8 @@ export default class MouseCard extends Laya.Script {
         this.lblKana.text = null;
 
         this.isHitted = false;
+
+        this.hole = null;
     }
 
     // 每一帧函数执行之前执行，一般用于初始化
@@ -36,6 +38,8 @@ export default class MouseCard extends Laya.Script {
         this.isHitted = true;
         
         // console.log("打到了老鼠："+this.lblKana.text);
+        // console.log("打到了老鼠："+this.hole.x,this.hole.y);
+
 
         this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
 
@@ -56,17 +60,19 @@ export default class MouseCard extends Laya.Script {
             // this.gameManager.arrMouse[this.indexPosMouse] = null;
         });
 
-        // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
-        this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
+        // 把地鼠位置hole，和地鼠假名传回gameManager.js
+        this.gameManager.onMouseHitted(this.hole,this.lblKana.text);
 
     }
 
     // 自定义方法
     //定义三个变量，从外部传进来(typeMouse为了切换地鼠png; 
     // 而gameManager，indexPosMouse只为了最后清空地鼠数组)
-    show(typeMouse) {
-        // this.gameManager = gameManager; 
+    show(gameManager,typeMouse,hole) {
+        this.gameManager = gameManager; 
         this.typeMouse = typeMouse;
+        this.hole = hole;
+
         // this.indexPosMouse = indexPosMouse;
 
         this.owner.skin = "res/mouse0"+this.typeMouse+".png";

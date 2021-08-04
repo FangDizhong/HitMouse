@@ -65,7 +65,7 @@ export default class GameManager extends Laya.Script {
         this.btnPlayAgain = null;
 
         // 声明成员存放老鼠对象
-        this.hole = null;
+        // this.hole = null;
         this.arrMouse = [];
         this.compMouse = null;
 
@@ -111,7 +111,7 @@ export default class GameManager extends Laya.Script {
     }
 
     // 地鼠被打时把位置参数传进来
-    onMouseHitted(posHole) {
+    onMouseHitted(posHole,hittedKana) {
         // 如果游戏不在进行中，则不给砸
         if (!this.isPlaying) {
             return;
@@ -132,9 +132,9 @@ export default class GameManager extends Laya.Script {
         // this.isPlusScore = typeMouse == 2 ? true : false; 
 
         //判断this.Word.arrKana里包不包括this.lblKana.text，是则+100，否则-100
-        this.isPlusScore = this.Word.arrKana.indexOf(this.compMouse.lblKana.text) > -1 ? true : false; 
+        this.isPlusScore = this.Word.arrKana.indexOf(hittedKana) > -1 ? true : false; 
 
-        console.log("打到了老鼠："+this.compMouse.lblKana.text,"此时单词为",this.Word.arrKana);
+        console.log("打到了老鼠：",hittedKana,"此时单词为",this.Word.arrKana);
 
         //获取ScoreFloat组件的ScoreFloat.js脚本
         let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
@@ -230,7 +230,7 @@ export default class GameManager extends Laya.Script {
         this.lblWords.text = this.Word.arrRoma.join(" ");   // 更新UI里的值
         console.log("此时展示单词和剩下数组状态为",this.lblWords.text,this.arrWordsList);
         this.CardKana.length = 0;
-        this.CardKana = this.Word.arrKana; //
+        this.CardKana = this.Word.arrKana.slice(); //
         // this.CardKana.push.apply (this.CardKana,this.Word.arrKana);
         console.log("此时展示假名数组为",this.CardKana); 
 
@@ -320,14 +320,16 @@ export default class GameManager extends Laya.Script {
             // }
 
             // 从游戏老鼠(洞)数组中选择随机index位置，删除1个洞，[0]表示不做替换
-            this.hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
+            // this.hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
+            let hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
             // console.log("此时剩下鼠洞",this.arrPosMouse.length);
 
             let mouse = this.prefabMouseCard.create(); //调用预制体的create方法创造地鼠赋值给mouse对象
             this.containerMouse.addChild(mouse); //把创造出来的老鼠放进容器里
 
             // let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
-            mouse.pos(this.hole.x,this.hole.y);
+            // mouse.pos(this.hole.x,this.hole.y);
+            mouse.pos(hole.x,hole.y);
 
             // 解决同一个洞出两种不同地鼠的问题
             // this.arrMouse[indexPosMouse] = mouse;
@@ -337,10 +339,11 @@ export default class GameManager extends Laya.Script {
             let typeMouse = this.getRandomInt(1,2); //随机1或2
             this.compMouse.lblKana.text = this.CardKana.splice(0,1)[0];   // 更新UI里的值
 
-            //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
+            // 在show时，
+            //把this(整个GameManager)传到Mouse.js里方便onclick修改onMouseHitted，
             // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
-            //把index传过去，方便拿到坐标
-            this.compMouse.show(typeMouse); 
+            //把hole坐标传过去，方便onClick修改onMouseHitted的斧头坐标
+            this.compMouse.show(this,typeMouse,hole); 
         }
 
         Laya.timer.once(3000, this, this.generateMouseCard,[this.getRandomInt(5,GameConfig.arrPosMouse.length)]);

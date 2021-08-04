@@ -291,6 +291,8 @@
             this.lblKana.text = null;
 
             this.isHitted = false;
+
+            this.hole = null;
         }
 
         // 每一帧函数执行之前执行，一般用于初始化
@@ -308,6 +310,8 @@
             this.isHitted = true;
             
             // console.log("打到了老鼠："+this.lblKana.text);
+            // console.log("打到了老鼠："+this.hole.x,this.hole.y);
+
 
             this.owner.skin = "res/mouse_hitted0"+this.typeMouse+".png";
 
@@ -328,17 +332,19 @@
                 // this.gameManager.arrMouse[this.indexPosMouse] = null;
             });
 
-            // 把地鼠位置index，和地鼠类型传进来。前者判断打中的地鼠位置，后者判断打中的地鼠类型
-            // this.gameManager.onMouseHitted(this.indexPosMouse, this.typeMouse);
+            // 把地鼠位置hole，和地鼠假名传回gameManager.js
+            this.gameManager.onMouseHitted(this.hole,this.lblKana.text);
 
         }
 
         // 自定义方法
         //定义三个变量，从外部传进来(typeMouse为了切换地鼠png; 
         // 而gameManager，indexPosMouse只为了最后清空地鼠数组)
-        show(typeMouse) {
-            // this.gameManager = gameManager; 
+        show(gameManager,typeMouse,hole) {
+            this.gameManager = gameManager; 
             this.typeMouse = typeMouse;
+            this.hole = hole;
+
             // this.indexPosMouse = indexPosMouse;
 
             this.owner.skin = "res/mouse0"+this.typeMouse+".png";
@@ -477,7 +483,7 @@
             this.btnPlayAgain = null;
 
             // 声明成员存放老鼠对象
-            this.Hole = null;
+            // this.hole = null;
             this.arrMouse = [];
             this.compMouse = null;
 
@@ -523,29 +529,30 @@
         }
 
         // 地鼠被打时把位置参数传进来
-        onMouseHitted(indexPosMouse, typeMouse) {
+        onMouseHitted(posHole,hittedKana) {
             // 如果游戏不在进行中，则不给砸
             if (!this.isPlaying) {
                 return;
             }
-            let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
-            this.hammer.pos(posMouse.x + 120, posMouse.y - 60); //赋予锤子的坐标+偏移量
-            
+            // let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
+            // this.hammer.pos(posMouse.x + 120, posMouse.y - 60); //赋予锤子的坐标+偏移量
+            this.hammer.pos(posHole.x + 120, posHole.y - 60); //赋予锤子的坐标+偏移量
+
             let compHammer = this.hammer.getComponent(Hammer); //获取hammer组件的Hammer.js脚本
             compHammer.show();
 
             //调用预制体的create方法创造浮动分数赋值给ScoreFloat对象
             let scoreFloat = this.prefabScoreFloat.create();
             this.containerScoreFloat.addChild(scoreFloat); //把创造出来的浮动分数放进容器里
-            scoreFloat.pos(posMouse.x,posMouse.y);
+            scoreFloat.pos(posHole.x,posHole.y);
 
             //判断是不是钢盔地鼠2，是则+100，否则-100
             // this.isPlusScore = typeMouse == 2 ? true : false; 
 
             //判断this.Word.arrKana里包不包括this.lblKana.text，是则+100，否则-100
-            this.isPlusScore = this.Word.arrKana.indexOf(this.compMouse.lblKana.text) > -1 ? true : false; 
+            this.isPlusScore = this.Word.arrKana.indexOf(hittedKana) > -1 ? true : false; 
 
-            console.log("打到了老鼠："+this.compMouse.lblKana.text,"此时单词为",this.Word.arrKana);
+            console.log("打到了老鼠：",hittedKana,"此时单词为",this.Word.arrKana);
 
             //获取ScoreFloat组件的ScoreFloat.js脚本
             let compScoreFloat = scoreFloat.getComponent(ScoreFloat); 
@@ -641,7 +648,7 @@
             this.lblWords.text = this.Word.arrRoma.join(" ");   // 更新UI里的值
             console.log("此时展示单词和剩下数组状态为",this.lblWords.text,this.arrWordsList);
             this.CardKana.length = 0;
-            this.CardKana = this.Word.arrKana; //
+            this.CardKana = this.Word.arrKana.slice(); //
             // this.CardKana.push.apply (this.CardKana,this.Word.arrKana);
             console.log("此时展示假名数组为",this.CardKana); 
 
@@ -731,14 +738,16 @@
                 // }
 
                 // 从游戏老鼠(洞)数组中选择随机index位置，删除1个洞，[0]表示不做替换
-                this.hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
+                // this.hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
+                let hole = this.arrPosMouse.splice(indexPosMouse, 1)[0];
                 // console.log("此时剩下鼠洞",this.arrPosMouse.length);
 
                 let mouse = this.prefabMouseCard.create(); //调用预制体的create方法创造地鼠赋值给mouse对象
                 this.containerMouse.addChild(mouse); //把创造出来的老鼠放进容器里
 
                 // let posMouse = GameConfig.arrPosMouse[indexPosMouse]; //拿到老鼠坐标
-                mouse.pos(this.hole.x,this.hole.y);
+                // mouse.pos(this.hole.x,this.hole.y);
+                mouse.pos(hole.x,hole.y);
 
                 // 解决同一个洞出两种不同地鼠的问题
                 // this.arrMouse[indexPosMouse] = mouse;
@@ -748,10 +757,11 @@
                 let typeMouse = this.getRandomInt(1,2); //随机1或2
                 this.compMouse.lblKana.text = this.CardKana.splice(0,1)[0];   // 更新UI里的值
 
-                //把this(整个GameManager)传到Mouse.js里方便拿到arrMouse数组，
+                // 在show时，
+                //把this(整个GameManager)传到Mouse.js里方便onclick修改onMouseHitted，
                 // 把typeMouse传过去方方便切换01.png，02.png的皮肤,
-                //把index传过去，方便拿到坐标
-                this.compMouse.show(typeMouse); 
+                //把hole坐标传过去，方便onClick修改onMouseHitted的斧头坐标
+                this.compMouse.show(this,typeMouse,hole); 
             }
 
             Laya.timer.once(3000, this, this.generateMouseCard,[this.getRandomInt(5,GameConfig.arrPosMouse.length)]);
